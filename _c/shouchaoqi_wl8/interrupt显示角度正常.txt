@@ -1,0 +1,888 @@
+#include"iodefine.h"
+#include"stdint.h"
+#define key_in  PORT2.PORT.BYTE
+#define key_out PORT3.DR.BYTE
+#include<machine.h>
+
+static uint8_t key_prs[3][3];//*************以下定义变量
+unsigned short keycnt[3][3];
+static uint8_t key_down[3][3];
+static uint8_t key_long[3][3];
+static uint8_t key_once[3][3];
+static uint8_t key_longrising[3][3];
+
+
+extern unsigned short parabit;
+
+extern unsigned short para1;//*********************************以下定义变量************************
+extern unsigned short para1_compare;
+extern unsigned short parabit;
+static uint8_t ledbit=1;
+static short j;
+static short t;
+static uint8_t countLED;
+static short n=0;
+
+unsigned char HIT_judge;
+unsigned short HIT_tran_start;
+
+
+extern unsigned short HIT_PNnum[152];
+extern unsigned short HIT_addressnum[152];
+extern unsigned short HIT_Fn_Sn_f_s[152];
+
+static short e=5;
+static short p;
+unsigned short HIT_table_d;
+extern unsigned short para[5];
+extern unsigned short para1;
+extern unsigned short parae[5];
+
+
+unsigned short rcvbuff_t;
+unsigned short rcvbuff_short;
+
+unsigned short rcvbuff_char_1;
+unsigned short rcvbuff_char_2;
+unsigned short rcvbuff_char_3;
+unsigned short rcvbuff_char_4;
+unsigned char rcvbuff_char;
+extern unsigned char trcbuff[4];
+extern unsigned char rcvbuff[4];
+//extern unsigned short rcvbuff[8];
+extern int HIT_current_filter_initial;
+extern int HIT_current_filter_depth;
+extern int para1_filter[20];
+extern int para1_sum;
+extern int HIT_u_sensor_sum;
+//extern unsigned char g[4];
+extern unsigned short g[4];
+unsigned short HIT_encord_need = 0;
+unsigned char HIT_senddata[8];
+unsigned short HIT_change_num;
+unsigned short HIT_change_num_title;
+unsigned char HIT_send_data;
+unsigned char HIT_send_data_buff[4];
+unsigned char HIT_ee_dis;
+unsigned short HIT_send_adrr;
+unsigned short HIT_rec_adrr_buff_short;
+
+
+void Mtu0IcCmAIntFunc();//******************以下定义函数
+void UpdateKeyval();
+void Smoothing();
+
+
+void ChangeNum();
+
+//void Mtu0IcCmBIntFunc();//*******************以下定义函数************************
+void DispNum(uint8_t Num);
+void SON(uint8_t i);
+void disp(void);
+void Flashing();
+
+void SendData(void);
+void ReceiveData(void);
+
+//void R_PG_SCI_StartReceiving_C0();
+
+void Sci0TrFunc()
+{
+	
+}
+
+
+void Sci0ReFunc()
+{
+	/*	
+	rcvbuff[0]=1;
+	rcvbuff[1]=3;
+	rcvbuff[2]=1;
+	rcvbuff[3]=4;
+*/	
+//	para1=rcvbuff[0]+rcvbuff[1]+rcvbuff[2]+rcvbuff[3]+rcvbuff[4]+rcvbuff[5]+rcvbuff[6]+rcvbuff[7];
+//	para1=rcvbuff[0];
+//	para1=3456;
+/*		   para[0]=rcvbuff[0]%10;		//	*********显示参数
+		   para[1]=(rcvbuff[0]/10)%10;
+		   para[2]=(rcvbuff[0]/100)%10;
+		   para[3]=(rcvbuff[0]/1000)%10;
+		   para[4]=(rcvbuff[0]/10000)%10;*/
+		
+		
+
+	
+
+//	PORTB.DR.BIT.B6=1;
+	
+//	PORTB.DR.BIT.B4=1;
+/*	if(HIT_encord_need == 1)
+	{
+		R_PG_SCI_StartReceiving_C0(&rcvbuff_char,3);	
+		HIT_judge = (rcvbuff_char&0xf0)>>4;
+		if(HIT_judge == 1)
+		{
+			HIT_tran_start = 1;	
+		}
+		if(HIT_tran_start == 1)
+		{
+			if(HIT_judge == 1)
+			{
+				rcvbuff_char_1 = (unsigned short)(rcvbuff_char&0x0f)<<12;	
+			}	
+			if(HIT_judge == 2)
+			{
+				rcvbuff_char_2 = (unsigned short)(rcvbuff_char&0x0f)<<8;	
+			}
+			if(HIT_judge == 3)
+			{
+				rcvbuff_char_3 = (unsigned short)(rcvbuff_char&0x0f)<<4;	
+			}
+			if(HIT_judge == 4)
+			{
+				rcvbuff_char_4 = (unsigned short)(rcvbuff_char&0x0f);	
+			}
+			rcvbuff_short = rcvbuff_char_1 + rcvbuff_char_2 + rcvbuff_char_3 + rcvbuff_char_4;
+		}
+			if(HIT_current_filter_initial == 1)
+			{
+				HIT_current_filter_initial = 0;
+				HIT_current_filter_depth = 0;
+			
+				para1_filter[0] = rcvbuff_short;
+				para1_filter[1] = rcvbuff_short;
+				para1_filter[2] = rcvbuff_short;
+			
+				para1_filter[3] = rcvbuff_short;
+				para1_filter[4] = rcvbuff_short;
+				para1_filter[5] = rcvbuff_short;
+			
+				para1_filter[6] = rcvbuff_short;
+				para1_filter[7] = rcvbuff_short;
+				para1_filter[8] = rcvbuff_short;
+			
+				para1_filter[9] = rcvbuff_short;
+				para1_filter[10] = rcvbuff_short;
+				para1_filter[11] = rcvbuff_short;
+			
+				para1_filter[12] = rcvbuff_short;
+				para1_filter[13] = rcvbuff_short;
+				para1_filter[14] = rcvbuff_short;
+			
+				para1_filter[15] = rcvbuff_short;
+				para1_filter[16] = rcvbuff_short;
+				para1_filter[17] = rcvbuff_short;
+			
+				para1_filter[18] = rcvbuff_short;
+				para1_filter[19] = rcvbuff_short;
+
+				para1_sum = rcvbuff_short/20;
+
+			}
+		
+			para1_sum -= para1_filter[HIT_current_filter_depth];
+			para1_filter[HIT_current_filter_depth] = rcvbuff_short;
+			para1_sum += rcvbuff_short;
+			++HIT_current_filter_depth;
+			if(HIT_current_filter_depth == 20)
+			{
+				HIT_current_filter_depth = 0;
+			}
+			HIT_u_sensor_sum = para1_sum;	
+			rcvbuff_short = HIT_u_sensor_sum/20;
+	
+		
+
+				 para[0]=rcvbuff_short%10;//rcvbuff[1]%10;		//	*********显示参数
+		  
+				 para[1]=(rcvbuff_short/10)%10;;//(rcvbuff[1]/10)%10;
+				 para[2]=(rcvbuff_short/100)%10;//rcvbuff[1]%10;
+				 para[3]=(rcvbuff_short/1000)%10;//(rcvbuff[1]/10)%10;
+				 para[4]=(rcvbuff_short/10000)%10;	 
+	}	
+	if(key_prs[0][2]==1)
+	 {
+		 HIT_encord_need = 0;	 
+	 }
+	*/
+}
+
+
+
+
+
+void Mtu0IcCmAIntFunc()//*******************************中断函数开始****************************
+{
+	MTU0.TSR.BIT.TGFA=0;
+	
+	UpdateKeyval();
+//	para1=para[0]+para[1]*16+para[2]*16*17+para[3]*100+para[4]*100;
+	
+/*	if(key_once[0][0]==1)
+	{
+		SendData();
+	}//**************************display***********************/
+
+//	SendData();
+		
+////	ReceiveData();//20120930wl
+
+	ChangeNum();//20120930wl
+	
+	disp();
+//	Flashing();
+
+	
+	//	R_PG_SCI_ReceiveAllData_C0(trcbuff,1);
+	
+//	para1=trcbuff[0];
+
+
+	
+//	trcbuff2[0]=para1;
+	
+//	R_PG_SCI_SendAllData_C0(trcbuff2,1);
+	
+
+	
+
+
+	
+	
+		
+//	trcbuff[0]=0x1;
+//	trcbuff[1]=0x2;
+//	trcbuff[2]=0x3;
+//	trcbuff[3]=0x4;
+//	R_PG_SCI_SendAllData_C0(trcbuff,4);
+	
+//	para1=trcbuff[0];
+
+
+
+	
+
+
+}
+
+void UpdateKeyval()//**********************************键盘扫描****包含滤波*****************************************
+{
+	key_out=0x01;
+		if((key_in&0x04)==0){key_prs[0][0]=0;}
+		if((key_in&0x04)!=0){key_prs[0][0]=1;}//对[0][0]对应16端口做出判断***************display
+	
+//		if((key_in&0x08)==0){key_prs[0][1]=0;}
+//		if((key_in&0x08)!=0){key_prs[0][1]=1;}//对[0][1]对应15端口做出判断**************空置
+		
+		if((key_in&0x10)==0){key_prs[0][2]=0;}
+		if((key_in&0x10)!=0){key_prs[0][2]=1;}//对[0][2]对应14端口做出判断***************reset
+		
+	key_out=0x02;
+		if((key_in&0x04)==0){key_prs[1][0]=0;}
+		if((key_in&0x04)!=0){key_prs[1][0]=1;}//对[1][0]对应26端口做出判断***************DATA
+	
+		if((key_in&0x08)==0){key_prs[1][1]=0;}
+		if((key_in&0x08)!=0){key_prs[1][1]=1;}//对[1][1]对应25端口做出判断**************up
+		
+		if((key_in&0x10)==0){key_prs[1][2]=0;}
+		if((key_in&0x10)!=0){key_prs[1][2]=1;}//对[1][2]对应24端口做出判断***************JOG
+		
+	key_out=0x04;
+		if((key_in&0x04)==0){key_prs[2][0]=0;}
+		if((key_in&0x04)!=0){key_prs[2][0]=1;}//对[2][0]对应36端口做出判断***************right
+	
+		if((key_in&0x08)==0){key_prs[2][1]=0;}
+		if((key_in&0x08)!=0){key_prs[2][1]=1;}//对[2][1]对应35端口做出判断***************down
+		
+		if((key_in&0x10)==0){key_prs[2][2]=0;}
+		if((key_in&0x10)!=0){key_prs[2][2]=1;}//对[2][2]对应34端口做出判断***************left
+		
+		Smoothing();
+			
+}
+
+void Smoothing()//*****************************************滤波*********************************************
+{
+	uint8_t i,j;
+	for(i=0;i<3;i++)
+	{
+		for(j=0;j<3;j++)
+		{
+			if(key_prs[i][j]==1){keycnt[i][j]++;}
+			if(key_prs[i][j]==0){keycnt[i][j]=0;}
+			
+			if(keycnt[i][j]>100) {key_down[i][j]=1;}//一个奇怪的现象：如果用key_down=1来作为灯亮的条件，一直按住按键**
+			if(keycnt[i][j]<=100){key_down[i][j]=0;}//灯是闪的，因为keycnt没有清零，不停的累加，溢出后重0开始计数*****
+			
+			if(keycnt[i][j]>1000) {key_long[i][j]=1;}//keycnt的类型很重要，如果定义的不对，很可能加不到1000.
+			if(keycnt[i][j]<=1000){key_long[i][j]=0;}//一定要定义可以大于1000的变量
+			
+			if(keycnt[i][j]==101) {key_once[i][j]=1;}
+			if(keycnt[i][j]!=101){key_once[i][j]=0;}
+			
+			if(keycnt[i][j]==1001) {key_longrising[i][j]=1;}
+			if(keycnt[i][j]!=1000){key_longrising[i][j]=0;}
+			
+			if((keycnt[i][j]>1001)&&(keycnt[i][j]%500==0)){key_longrising[i][j]=1;}
+		}
+	
+	}
+}
+
+unsigned char HIT_send_adrr_buff[8];
+
+unsigned char HIT_rec_adrr_buff[8];
+unsigned int HIT_send_adrr_int;
+unsigned char HIT_data_enter = 0;
+unsigned char HIT_send_enc_ok = 0;
+unsigned char HIT_unable_flag = 0;
+
+void ChangeNum()//*********************************修改para1 的值*************************
+{
+	if(para[e]>19)
+	     {para[e]=0;}
+	
+	if(para[e]<0)
+	     {para[e]=19;}
+		
+		 
+	if(e>5)
+	      {e=0;}
+	  
+	if(e<0)
+	       {e=5;}
+	  
+	if(key_once[1][1]==1)//up键按下
+		{para[e]=para[e]+parabit;}//add para1 
+		
+	if(key_once[2][1]==1)//down键按下
+		{para[e]=para[e]-parabit;}//add para1 
+		
+	if(key_once[2][2]==1)//left键按下
+		{e=e+1;}//add para1 
+		
+	if(key_once[2][0]==1)//right键按下
+		{e=e-1;}//add para1 
+		
+		
+		
+		
+		
+		
+//		 g[n]=para[0]+para[1]*10+para[2]*100+para[3]*1000+para[4]*10000;
+		
+		
+		
+//		para1=para[0]+para[1]*17+para[2]*18*17+para[3]*1000+para[4]*10000;
+	SCI0.SSR.BIT.RDRF = 0;
+	if(HIT_send_enc_ok == 1)
+	{
+		SCI0.SSR.BIT.RDRF = 0;
+		R_PG_SCI_StartReceiving_C0(HIT_rec_adrr_buff,8);
+		
+		HIT_rec_adrr_buff_short = (((unsigned short)HIT_rec_adrr_buff[6])<<8) + (unsigned short)(HIT_rec_adrr_buff[7]);
+		
+		para[0]=HIT_rec_adrr_buff_short%10;		//	*********显示参数
+		para[1]=(HIT_rec_adrr_buff_short/10)%10;
+		para[2]=(HIT_rec_adrr_buff_short/100)%10;
+		para[3]=(HIT_rec_adrr_buff_short/1000)%10;
+		para[4]=(HIT_rec_adrr_buff_short/10000)%10;
+		HIT_unable_flag = 1;
+	}	
+	
+	para1_compare = para[0]+para[1]*16+para[2]*16*17+para[3]*100+para[4]*100;	
+if(HIT_unable_flag == 0)
+{	
+	if(key_prs[0][0]==1)  			//****dspl		
+	{
+	//	para1_compare=para[0]+para[1]*17+para[2]*18*17+para[3]*1000+para[4]*10000;
+	//   HIT_ee_dis = 0x55;
+	//   R_PG_SCI_StartSending_C0(&HIT_ee_dis,1);
+		
+	   for(HIT_table_d=0;HIT_table_d<152;HIT_table_d++)
+	   {
+		  if(para1_compare == 0x0c26)
+		  {
+			  HIT_send_enc_ok = 1;	  
+		  }
+		  if(HIT_PNnum[HIT_table_d]==para1_compare)
+	      {
+			  parae[0]=para[0];
+			  parae[1]=para[1];
+			  parae[2]=para[2];
+			  parae[3]=para[3];
+			  parae[4]=para[4];
+///////////////////////////////////////send fn_pn data address	///////////////////////		  
+			  HIT_send_adrr = HIT_PNnum[HIT_table_d];
+			  
+			  HIT_send_adrr_int = (int)HIT_send_adrr;
+			  
+			  HIT_send_adrr_buff[7] = (unsigned char)(HIT_send_adrr_int&0x000f) + 128;//////////data	
+			  HIT_send_adrr_buff[6] = (unsigned char)((HIT_send_adrr_int&0x00f0)>>4) +112;
+			  HIT_send_adrr_buff[5] = (unsigned char)((HIT_send_adrr_int&0x0f00)>>8) + 96;
+			  HIT_send_adrr_buff[4] = (unsigned char)((HIT_send_adrr_int&0xf000)>>12) + 80;
+			  
+			  HIT_send_adrr_buff[3] = (unsigned char)(HIT_send_adrr_int&0x000f) + 64;///////////address	
+			  HIT_send_adrr_buff[2] = (unsigned char)((HIT_send_adrr_int&0x00f0)>>4) +48;
+			  HIT_send_adrr_buff[1] = (unsigned char)((HIT_send_adrr_int&0x0f00)>>8) + 32;
+			  HIT_send_adrr_buff[0] = (unsigned char)((HIT_send_adrr_int&0xf000)>>12) + 16;
+			  
+			  SCI0.SSR.BIT.RDRF = 0;
+			  R_PG_SCI_StartSending_C0(HIT_send_adrr_buff,8);
+			  
+			  R_PG_SCI_StartReceiving_C0(HIT_rec_adrr_buff,8);
+			   
+			   HIT_rec_adrr_buff_short = (((unsigned short)HIT_rec_adrr_buff[6])<<8) + (unsigned short)(HIT_rec_adrr_buff[7]);
+			   
+			   para[0]=HIT_rec_adrr_buff_short%10;		//	*********显示参数
+			   para[1]=(HIT_rec_adrr_buff_short/10)%10;
+			   para[2]=(HIT_rec_adrr_buff_short/100)%10;
+			   para[3]=(HIT_rec_adrr_buff_short/1000)%10;
+			   para[4]=(HIT_rec_adrr_buff_short/10000)%10;
+///////////////////////////////////////send fn_pn data address END	///////////////////////	
+///*		if(HIT_table_d == 0)//fn001 encorder angle
+/*			  {
+				  
+				  HIT_encord_need = 1;
+				  R_PG_SCI_StartReceiving_C0(&rcvbuff_char,3);	
+					HIT_judge = (rcvbuff_char&0xf0)>>4;
+					if(HIT_judge == 1)
+					{
+						HIT_tran_start = 1;	
+					}
+					if(HIT_tran_start == 1)
+					{
+						if(HIT_judge == 1)
+						{
+							rcvbuff_char_1 = (unsigned short)(rcvbuff_char&0x0f)<<12;	
+						}	
+						if(HIT_judge == 2)
+						{
+							rcvbuff_char_2 = (unsigned short)(rcvbuff_char&0x0f)<<8;	
+						}
+						if(HIT_judge == 3)
+						{
+							rcvbuff_char_3 = (unsigned short)(rcvbuff_char&0x0f)<<4;	
+						}
+						if(HIT_judge == 4)
+						{
+							rcvbuff_char_4 = (unsigned short)(rcvbuff_char&0x0f);	
+						}
+						rcvbuff_short = rcvbuff_char_1 + rcvbuff_char_2 + rcvbuff_char_3 + rcvbuff_char_4;
+					}
+						if(HIT_current_filter_initial == 1)
+						{
+							HIT_current_filter_initial = 0;
+							HIT_current_filter_depth = 0;
+			
+							para1_filter[0] = rcvbuff_short;
+							para1_filter[1] = rcvbuff_short;
+							para1_filter[2] = rcvbuff_short;
+			
+							para1_filter[3] = rcvbuff_short;
+							para1_filter[4] = rcvbuff_short;
+							para1_filter[5] = rcvbuff_short;
+			
+							para1_filter[6] = rcvbuff_short;
+							para1_filter[7] = rcvbuff_short;
+							para1_filter[8] = rcvbuff_short;
+			
+							para1_filter[9] = rcvbuff_short;
+							para1_filter[10] = rcvbuff_short;
+							para1_filter[11] = rcvbuff_short;
+			
+							para1_filter[12] = rcvbuff_short;
+							para1_filter[13] = rcvbuff_short;
+							para1_filter[14] = rcvbuff_short;
+			
+							para1_filter[15] = rcvbuff_short;
+							para1_filter[16] = rcvbuff_short;
+							para1_filter[17] = rcvbuff_short;
+			
+							para1_filter[18] = rcvbuff_short;
+							para1_filter[19] = rcvbuff_short;
+
+							para1_sum = rcvbuff_short/20;
+
+						}
+		
+						para1_sum -= para1_filter[HIT_current_filter_depth];
+						para1_filter[HIT_current_filter_depth] = rcvbuff_short;
+						para1_sum += rcvbuff_short;
+						++HIT_current_filter_depth;
+						if(HIT_current_filter_depth == 20)
+						{
+							HIT_current_filter_depth = 0;
+						}
+						HIT_u_sensor_sum = para1_sum;	
+						rcvbuff_short = HIT_u_sensor_sum/20;
+	
+						
+
+						 para[0]= rcvbuff_short%10;//rcvbuff[1]%10;		//	*********显示参数
+  
+						 para[1]= (rcvbuff_short/10)%10;;//(rcvbuff[1]/10)%10;
+						 para[2]= (rcvbuff_short/100)%10;//rcvbuff[1]%10;
+						 para[3]= (rcvbuff_short/1000)%10;//(rcvbuff[1]/10)%10;
+						 para[4]= (rcvbuff_short/10000)%10;	
+						  		  
+			  }
+			  else
+			  {
+				   para[0]=HIT_Fn_Sn_f_s[HIT_table_d]%10;		//	*********显示参数
+				   para[1]=(HIT_Fn_Sn_f_s[HIT_table_d]/10)%10;
+				   para[2]=(HIT_Fn_Sn_f_s[HIT_table_d]/100)%10;
+				   para[3]=(HIT_Fn_Sn_f_s[HIT_table_d]/1000)%10;
+				   para[4]=(HIT_Fn_Sn_f_s[HIT_table_d]/10000)%10;
+		   
+		//		   g[n]=para[0]+para[1]*10+para[2]*100+para[3]*1000+para[4]*10000;  
+		   
+				   n=n+1;
+	
+				  
+			  }*/
+			  
+		  }
+		}
+	
+	
+	}
+}
+	if(key_prs[0][2]==1)
+      {
+		  PORTB.DR.BIT.B7=1;
+		  e=5;
+		  para[0]=parae[0];
+		  para[1]=parae[1];
+		  para[2]=parae[2];
+		  para[3]=parae[3];
+		  para[4]=parae[4];
+
+	  }
+	if(key_prs[1][0]==0)
+	{
+		HIT_data_enter = 0;	
+	}
+	if(key_prs[1][0]==1)				//	*******************DATA
+		{
+			PORTB.DR.BIT.B7=0;
+/*			trcbuff[1]=para[0];
+			trcbuff[2]=para[1];
+			trcbuff[3]=para[2];
+			trcbuff[4]=para[3];
+			trcbuff[5]=para[4];
+			trcbuff[6]=para[5];*/
+			
+//			g[0]=para[0]+para[1]*10+para[2]*100+para[3]*1000+para[4]*10000;
+//			trcbuff[0]=9;
+			
+			if(HIT_data_enter < 150)
+			{
+				SendData();
+			}
+			HIT_data_enter++;
+			if(HIT_data_enter > 151)
+			{
+				HIT_data_enter = 151;	
+			}
+
+		}
+		
+	if(key_prs[1][2]==1)
+	{
+		e=5;	
+		HIT_change_num = para[0]+para[1]*10+para[2]*100+para[3]*1000+para[4]*10000;
+		HIT_change_num_title = parae[0]+parae[1]*16+parae[2]*16*17+parae[3]*100+parae[4]*100;
+		PORTB.DR.BIT.B7 = 1;	
+		
+	}
+	
+
+}
+
+
+
+
+void delay1ms(int x)			// 延迟函数开始 
+{	int i,j;					// 声明整数变数i,j 
+	for (i=0;i<x;i++)			// 计数x次,延迟x 1ms 
+		for (j=0;j<120;j++);	// 计数120次，延迟1ms 
+}	
+
+
+
+
+
+
+
+
+
+void disp(void)//*****************************************显示para1的值***************************
+{
+	
+	switch(ledbit)
+	{
+		case 1:
+			{
+				SON(ledbit);
+				DispNum(para[0]);//para[0]
+			if(e==1)
+			  	{delay1ms(480);}
+				ledbit++;break;}
+		case 2:
+			{
+				SON(ledbit);
+				DispNum(para[1]);//para[1]
+			if(e==2)
+			  	{delay1ms(480);}
+				ledbit++;break;}
+		case 3:
+			{
+				SON(ledbit);
+				DispNum(para[2]);//para[2]
+			if(e==3)
+			  	{delay1ms(480);}
+				ledbit++;break;}
+		case 4:
+			{
+				SON(ledbit);
+			DispNum(para[3]);//para[3]
+			if(e==4)
+			  	{delay1ms(480);}
+				ledbit++;break;}
+		case 5:
+			{
+				SON(ledbit);
+				DispNum(para[4]);//para[4]
+			if(e==0)
+			  	{delay1ms(480);}
+			ledbit=1;break;}
+		default:
+			break;
+	}
+}
+
+void SON(uint8_t i)//**************************************数码管位选************************************
+{
+	switch(i)
+	{
+		case 5:
+			PORT1.DR.BIT.B1=1;//             
+			PORTA.DR.BYTE=0;break;	//一定要所有的数码管选中端口同时赋值，否则
+		case 4:						//break退出之后赋的值保持，导致所有数码管显示同样的数字
+			PORT1.DR.BIT.B1=0;
+			PORTA.DR.BYTE=0x04;break;
+		case 3:
+			PORT1.DR.BIT.B1=0;//**********************百位************右数第三个
+			PORTA.DR.BYTE=0x08;break;
+		case 2:
+			PORT1.DR.BIT.B1=0;//**********************十位************右数第二个
+			PORTA.DR.BYTE=0x10;break;
+		case 1:
+			PORT1.DR.BIT.B1=0;// *********************个位************右数第一个数码管选定
+			PORTA.DR.BYTE=0x20;break;
+		default:
+			break;
+	}
+}
+
+void DispNum(uint8_t Num)//*******************************显示内容***********************************
+{
+	switch(Num)
+	{
+		case 0:
+ 			PORT7.DR.BYTE = 0x01;//***********0-9的显示**********
+ 			PORT9.DR.BIT.B1 = 0X01;
+			break;
+		case 1:
+ 			PORT7.DR.BYTE = 0x73;
+ 			PORT9.DR.BIT.B1 = 0X01;
+			break;
+		case 2:
+ 			PORT7.DR.BYTE = 0x49;
+ 			PORT9.DR.BIT.B1 = 0X00; 
+			break;
+		case 3:
+ 			PORT7.DR.BYTE = 0x61;
+ 			PORT9.DR.BIT.B1 = 0X00;
+			break;
+		case 4:
+ 			PORT7.DR.BYTE = 0x33;
+ 			PORT9.DR.BIT.B1 = 0X00;
+			break;
+		case 5:
+ 			PORT7.DR.BYTE = 0x25;
+ 			PORT9.DR.BIT.B1 = 0X00;
+			break;
+		case 6:
+ 			PORT7.DR.BYTE = 0x05;
+ 			PORT9.DR.BIT.B1 = 0X00;
+			break;
+		case 7:
+ 			PORT7.DR.BYTE = 0x71;
+ 			PORT9.DR.BIT.B1 = 0X01;
+			break;
+		case 8:
+ 			PORT7.DR.BYTE = 0x01;
+ 			PORT9.DR.BIT.B1 = 0X00;
+			break;
+		case 9:
+ 			PORT7.DR.BYTE = 0x21;
+ 			PORT9.DR.BIT.B1 = 0X00;
+			break;
+		case 10:
+			PORT7.DR.BYTE = 16;
+			PORT9.DR.BIT.B1 = 0X00;//A
+			break;
+		case 11:	
+			PORT7.DR.BYTE = 6;
+			PORT9.DR.BIT.B1 = 0X00;//b
+			break;
+		case 12:
+			PORT7.DR.BYTE = 12;
+			PORT9.DR.BIT.B1 = 0X01;//c
+			break;	
+		case 13:
+			PORT7.DR.BYTE = 66;
+			PORT9.DR.BIT.B1 = 0X00;//d
+			break;
+		case 14:
+			PORT7.DR.BYTE = 12;
+			PORT9.DR.BIT.B1 = 0X00;//e
+			break;
+		case 15:
+			PORT7.DR.BYTE = 28;
+			PORT9.DR.BIT.B1 = 0X00;//f
+			break;
+		case 16:
+ 			PORT7.DR.BYTE = 0x57;//*******************显示 n
+ 			PORT9.DR.BIT.B1 = 0X00;
+			break;
+		case 17:
+ 			PORT7.DR.BYTE = 0x0f;//*******************显示 t
+ 			PORT9.DR.BIT.B1 = 0X00;
+			break;		
+		case 18:
+ 			PORT7.DR.BYTE = 0x19;//*******************显示 P
+ 			PORT9.DR.BIT.B1 = 0X00;
+			break;
+		case 19:
+ 			PORT7.DR.BYTE = 0x03;//*******************显示 U
+ 			PORT9.DR.BIT.B1 = 0X01;
+			break;
+				
+	}
+}
+void Flashing()
+{
+	j++;
+
+	if(j>400) 
+	{
+		
+		t=parabit;
+		countLED=0;
+
+		while(t!=0)
+		{
+			t=t/10;
+			countLED++;
+		}
+	
+		if(ledbit==countLED++&&ledbit!=5){ledbit=ledbit+1;};
+	}
+	if(j==801){j=1;}
+}
+
+unsigned short HIT_send_ser_num = 0;
+unsigned short HIT_Re_change_num_title;
+void SendData(void)
+{
+//	HIT_rec_adrr_buff_short
+	
+	HIT_senddata[7] = (unsigned char)(HIT_change_num&0x000f) + 128;	
+	HIT_senddata[6] = (unsigned char)((HIT_change_num&0x00f0)>>4) +112;
+	HIT_senddata[5] = (unsigned char)((HIT_change_num&0x0f00)>>8) + 96;
+	HIT_senddata[4] = (unsigned char)((HIT_change_num&0xf000)>>12) + 80;
+	
+	HIT_Re_change_num_title = 0;
+	
+	HIT_senddata[3] = (unsigned char)(HIT_Re_change_num_title&0x000f) + 64;//(unsigned char)(HIT_change_num_title&0x000f) + 64;	
+	HIT_senddata[2] = (unsigned char)((HIT_Re_change_num_title&0x00f0)>>4) + 48;//(unsigned char)((HIT_change_num_title&0x00f0)>>4) +48;
+	HIT_senddata[1] = (unsigned char)((HIT_Re_change_num_title&0x0f00)>>8) + 32;//(unsigned char)((HIT_change_num_title&0x0f00)>>8) + 32;
+	HIT_senddata[0] = (unsigned char)((HIT_Re_change_num_title&0xf000)>>12) + 16;//(unsigned char)((HIT_change_num_title&0xf000)>>12) + 16;
+	
+	/*
+	switch(HIT_send_ser_num)
+			{
+				case 0:
+					R_PG_SCI_StartSending_C0(&HIT_senddata[0],1);
+				break;	
+				case 1:
+					R_PG_SCI_StartSending_C0(&HIT_senddata[1],1);	
+				break;	
+				case 2:
+					R_PG_SCI_StartSending_C0(&HIT_senddata[2],1);
+				break;	
+				case 3:
+					R_PG_SCI_StartSending_C0(&HIT_senddata[3],1);	
+				break;
+				case 4:
+					R_PG_SCI_StartSending_C0(&HIT_senddata[4],1);	
+				break;
+				case 5:
+					R_PG_SCI_StartSending_C0(&HIT_senddata[5],1);
+				break;
+				case 6:
+					R_PG_SCI_StartSending_C0(&HIT_senddata[6],1);	
+				break;
+				case 7:
+					R_PG_SCI_StartSending_C0(&HIT_senddata[7],1);		
+				break;
+			}*/
+//	HIT_send_data = 0x55;
+//	HIT_send_data_buff[0] = 0x55;
+//	HIT_send_data_buff[1] = 0x55;
+//	HIT_send_data_buff[2] = 0x55;
+//	HIT_send_data_buff[3] = 0x55;
+//	if (HIT_send_ser_num < 5)
+	{
+//		R_PG_SCI_StartSending_C0(&HIT_send_data,4);
+//		R_PG_SCI_StartSending_C0(HIT_send_data_buff,4);
+		R_PG_SCI_StartSending_C0(HIT_senddata,8);
+	}
+//	HIT_send_ser_num++;
+	if (HIT_send_ser_num == 9)
+	{
+		HIT_send_ser_num = 0;	
+	}
+	
+	
+	
+	PORTB.DR.BIT.B7=0;
+	
+	nop();nop();nop();nop();
+}
+
+void ReceiveData(void)
+{
+	R_PG_SCI_StartReceiving_C0(rcvbuff,4);
+/*	
+	rcvbuff[0]=1;
+	rcvbuff[1]=3;
+	rcvbuff[2]=1;
+	rcvbuff[3]=4;
+*/	
+	para1=rcvbuff[0]*10+rcvbuff[1];
+	
+//	para1=3456;
+	
+//	PORTB.DR.BIT.B6=1;
+//	PORTB.DR.BIT.B4=1;
+	
+}
+
+
+
+
+

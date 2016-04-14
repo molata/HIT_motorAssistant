@@ -1,0 +1,6 @@
+-cpu=rx600
+-lang=c
+-output=obj="C:\WorkSpace\shouchaoqi_wl8\shouchaoqi_wl8\Debug\Flash_API_RX600.obj"
+-debug
+"C:\WorkSpace\shouchaoqi_wl8\shouchaoqi_wl8\Flash_API_RX600.c"
+-nologo

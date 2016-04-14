@@ -1,0 +1,8 @@
+-cpu=rx600
+-lang=c
+-include="C:\Renesas\PDG2_proj\shouchaoqi_wl8"
+-include="C:\Renesas\PDG2_proj\shouchaoqi_wl8\i_src"
+-output=obj="C:\WorkSpace\shouchaoqi_wl8\shouchaoqi_wl8\Debug\R_PG_Clock.obj"
+-debug
+"C:\Renesas\PDG2_proj\shouchaoqi_wl8\SYSTEM\R_PG_Clock.c"
+-nologo

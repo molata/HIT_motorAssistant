@@ -11,7 +11,6 @@
 		<Property Name="server.vi.propertiesEnabled" Type="Bool">true</Property>
 		<Property Name="specify.custom.address" Type="Bool">false</Property>
 		<Item Name="Main.vi" Type="VI" URL="../Main.vi"/>
-		<Item Name="MainCtlsAndVIRef.ctl" Type="VI" URL="../Controller/TypeDefine/MainCtlsAndVIRef.ctl"/>
 		<Item Name="Panel_UI.lvclass" Type="LVClass" URL="../Controller/Panel_UI.lvclass"/>
 		<Item Name="串口通信类.lvclass" Type="LVClass" URL="../串口通信类/串口通信类.lvclass"/>
 		<Item Name="Dependencies" Type="Dependencies">

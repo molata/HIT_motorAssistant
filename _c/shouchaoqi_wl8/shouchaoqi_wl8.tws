@@ -1,0 +1,27 @@
+[HIMDBVersion]
+2.0
+[DATABASE_VERSION]
+"1.2" 
+[CURRENT_PROJECT]
+"shouchaoqi_wl8" 
+[GENERAL_DATA]
+[BREAKPOINTS]
+[OPEN_WORKSPACE_FILES]
+"E:\实验室资料\程序\手操器\shouchaoqi_wl8\shouchaoqi_wl8\Flash_API_RX600.c" 
+"E:\实验室资料\程序\手操器\shouchaoqi_wl8\shouchaoqi_wl8\interupt.c" 
+"E:\实验室资料\程序\手操器\shouchaoqi_wl8\shouchaoqi_wl8\intprg.c" 
+"E:\实验室资料\程序\手操器\shouchaoqi_wl8\shouchaoqi_wl8\resetprg.c" 
+"E:\实验室资料\程序\手操器\shouchaoqi_wl8\shouchaoqi_wl8\sbrk.c" 
+"E:\实验室资料\程序\手操器\shouchaoqi_wl8\shouchaoqi_wl8\shouchaoqi_wl8.c" 
+"E:\实验室资料\程序\手操器\shouchaoqi_wl8\shouchaoqi_wl8\vecttbl.c" 
+[WORKSPACE_FILE_STATES]
+"E:\实验室资料\程序\手操器\shouchaoqi_wl8\shouchaoqi_wl8\Flash_API_RX600.c" 50 50 1390 400 0 2 
+"E:\实验室资料\程序\手操器\shouchaoqi_wl8\shouchaoqi_wl8\interupt.c" -8 -30 1606 638 1 1 
+"E:\实验室资料\程序\手操器\shouchaoqi_wl8\shouchaoqi_wl8\intprg.c" 150 150 1390 400 0 6 
+"E:\实验室资料\程序\手操器\shouchaoqi_wl8\shouchaoqi_wl8\resetprg.c" 75 75 1390 400 0 3 
+"E:\实验室资料\程序\手操器\shouchaoqi_wl8\shouchaoqi_wl8\sbrk.c" 125 125 1390 400 0 5 
+"E:\实验室资料\程序\手操器\shouchaoqi_wl8\shouchaoqi_wl8\shouchaoqi_wl8.c" 0 0 1411 421 0 0 
+"E:\实验室资料\程序\手操器\shouchaoqi_wl8\shouchaoqi_wl8\vecttbl.c" 100 100 1390 400 0 4 
+[LOADED_PROJECTS]
+"shouchaoqi_wl8" 
+[END]
